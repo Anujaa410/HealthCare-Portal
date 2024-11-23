@@ -1,0 +1,43 @@
+CREATE TABLE users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    email VARCHAR(100) UNIQUE,
+    password VARCHAR(255),
+    role ENUM('patient', 'doctor', 'admin') NOT NULL,
+    date_of_birth DATE,
+    gender ENUM('male', 'female', 'other'),
+    phone_number VARCHAR(20)
+);
+
+CREATE TABLE appointments (
+    appointment_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT, -- Foreign key to the users table (patients)
+    doctor_id INT, -- Foreign key to the users table (doctors)
+    appointment_date DATETIME,
+    status ENUM('scheduled', 'completed', 'canceled') DEFAULT 'scheduled',
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (doctor_id) REFERENCES users(user_id)
+);
+
+CREATE TABLE medical_records (
+    record_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT, -- Foreign key to the users table (patients)
+    record_type VARCHAR(50), -- e.g., "Blood Pressure", "Diabetes Test"
+    description TEXT,
+    result_value VARCHAR(100),
+    test_date DATE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
+CREATE TABLE prescriptions (
+    prescription_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT, -- Foreign key to the users table (patients)
+    doctor_id INT, -- Foreign key to the users table (doctors)
+    medication_name VARCHAR(100),
+    dosage VARCHAR(50),
+    start_date DATE,
+    end_date DATE,
+    instructions TEXT,
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (doctor_id) REFERENCES users(user_id)
+);
